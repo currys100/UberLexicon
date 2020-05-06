@@ -7,8 +7,6 @@ author: Sarah K. Curry
 
 import unittest
 from selenium import webdriver
-
-from selenium import webdriver
 import geckodriver_autoinstaller
 
 
@@ -23,11 +21,25 @@ class TestLaunchingDatabase(unittest.TestCase):
     #     driver.get("http://www.python.org")
     #     assert "Python" in driver.title
 
+    def setUp(self):
+        geckodriver_autoinstaller.install()
+        self.browser = webdriver.Firefox()
+
+    def tearDown(self):
+        self.browser.quit()
+
     def test_open_browser(self):
-        browser = webdriver.Firefox()
-        browser.get('http://localhost:8000')
-        assert 'Django' in browser.title
+        self.browser.get('http://localhost:8000')
+        self.assertIn('Django', self.browser.title)
+        # self.fail("Finish the test!")
+
+
+    # Alir wants to add a new word to the db.
+    # Alir wants to search the db for a specific word by name.
+    # Alir searches the db for all words in Japanese.
+    # Alir views all words in the db.
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(warnings='ignore')
+
