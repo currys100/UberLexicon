@@ -7,7 +7,8 @@ date: 05-2020
 author: Sarah K. Curry
 """
 
-
+import sys
+print(sys.path)
 
 def main():
     pass

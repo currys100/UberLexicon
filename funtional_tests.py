@@ -3,6 +3,14 @@ Functional tests for the UberLexicon
 
 date: 05-2020
 author: Sarah K. Curry
+
+Notes:
+    Initially I had installed geckdriver in my local project directory (~/UberLexicon/.). Even though this
+directory is included in $PATH, I repeatedly got the error that << selenium.common.exceptions.WebDriverException:
+Message: 'geckodriver' executable needs to be in PATH. >> I tried exporting PATH to add the current directory,
+and reinstalled geckodriver, but to no avail. I finally resolved the problem by moving geckodriver to /usr/local/bin,
+as directed here: https://stackoverflow.com/questions/40388503/how-to-put-geckodriver-into-path/40392714
+
 """
 
 import unittest
@@ -22,7 +30,7 @@ class TestLaunchingDatabase(unittest.TestCase):
     #     assert "Python" in driver.title
 
     def setUp(self):
-        geckodriver_autoinstaller.install()
+        # geckodriver_autoinstaller.install()
         self.browser = webdriver.Firefox()
 
     def tearDown(self):
