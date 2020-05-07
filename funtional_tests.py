@@ -15,8 +15,6 @@ as directed here: https://stackoverflow.com/questions/40388503/how-to-put-geckod
 
 import unittest
 from selenium import webdriver
-import geckodriver_autoinstaller
-
 
 class TestLaunchingDatabase(unittest.TestCase):
 
@@ -30,7 +28,6 @@ class TestLaunchingDatabase(unittest.TestCase):
     #     assert "Python" in driver.title
 
     def setUp(self):
-        # geckodriver_autoinstaller.install()
         self.browser = webdriver.Firefox()
 
     def tearDown(self):
