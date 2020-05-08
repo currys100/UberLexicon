@@ -18,6 +18,7 @@ import time
 import unittest
 
 
+# noinspection SpellCheckingInspection
 class TestLaunchingDatabase(unittest.TestCase):
     """
     Functional tests to determine if database and website are launched according to plan.
@@ -25,6 +26,17 @@ class TestLaunchingDatabase(unittest.TestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
+
+    def check_for_row_in_list_table(self, row_text):
+        """
+        Input:
+            row_text (str): new word entered by user
+
+        :rtype: object
+        """
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
 
     def tearDown(self):
         self.browser.quit()
@@ -54,17 +66,19 @@ class TestLaunchingDatabase(unittest.TestCase):
         # "kaizen" as an item in a lexicon table
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
+        self.check_for_row_in_list_table(self, 'kaizen')
 
-        table = self.browser.find_element_by_id('id_word_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('kaizen', [row.text for row in rows])
-
+        # Alir wants to enter another word.
+        inputbox.send_keys('genki')
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
+        self.check_for_row_in_list_table(self, 'kaizen')
+        self.check_for_row_in_list_table(self, 'genki')
 
 
     # Alir wants to search the db for a specific word by name.
     # Alir searches the db for all words in Japanese.
     # Alir views all words in the db.
-
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
