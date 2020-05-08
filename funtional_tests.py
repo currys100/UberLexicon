@@ -39,7 +39,7 @@ class TestLaunchingDatabase(unittest.TestCase):
         # She notices the page title and header mention to-do lists
         self.assertIn('UberLexicon', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
-        self.assertIn('UberLexicon: Add a Word', header_text)
+        self.assertIn('UberLexicon', header_text)
 
         # Alir wants to add a new word to the db.
         inputbox = self.browser.find_element_by_id('id_new_item')
@@ -51,15 +51,15 @@ class TestLaunchingDatabase(unittest.TestCase):
         inputbox.send_keys('kaizen')
 
         # When she hits enter, the page updates, and now the page lists
-        # "1: kaizen" as an item in a lexicon table
+        # "kaizen" as an item in a lexicon table
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
 
-        table = self.browser.find_element_by_id('id_list_table')
+        table = self.browser.find_element_by_id('id_word_table')
         rows = table.find_elements_by_tag_name('tr')
         self.assertTrue(
-            any(row.text == 'kaizen' for row in rows)
-        )
+            any(row.text == 'kaizen' for row in rows), "New item did not appear in table")
+
         self.fail("Finish the test!")
 
 
