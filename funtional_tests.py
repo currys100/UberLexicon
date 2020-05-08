@@ -57,10 +57,8 @@ class TestLaunchingDatabase(unittest.TestCase):
 
         table = self.browser.find_element_by_id('id_word_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == 'kaizen' for row in rows), "New item did not appear in table")
+        self.assertIn('kaizen', [row.text for row in rows])
 
-        self.fail("Finish the test!")
 
 
     # Alir wants to search the db for a specific word by name.
