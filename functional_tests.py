@@ -34,7 +34,7 @@ class TestLaunchingDatabase(unittest.TestCase):
 
         :rtype: object
         """
-        table = self.browser.find_element_by_id('id_list_table')
+        table = self.browser.find_element_by_id('id_word_table')
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn(row_text, [row.text for row in rows])
 
@@ -60,20 +60,21 @@ class TestLaunchingDatabase(unittest.TestCase):
             'Enter a word')
 
         # Alir adds the word 'kaizen'
-        inputbox.send_keys('kaizen')
+        inputbox.send_keys('genki')
 
         # When she hits enter, the page updates, and now the page lists
         # "kaizen" as an item in a lexicon table
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
-        self.check_for_row_in_list_table(self, 'kaizen')
+        self.check_for_row_in_list_table('kaizen')
 
         # Alir wants to enter another word.
+        inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('genki')
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
-        self.check_for_row_in_list_table(self, 'kaizen')
-        self.check_for_row_in_list_table(self, 'genki')
+        self.check_for_row_in_list_table('1: kaizen')
+        self.check_for_row_in_list_table('2: genki')
 
 
     # Alir wants to search the db for a specific word by name.
