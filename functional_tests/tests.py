@@ -11,7 +11,12 @@ Message: 'geckodriver' executable needs to be in PATH. >> I tried exporting PATH
 and reinstalled geckodriver, but to no avail. I finally resolved the problem by moving geckodriver to /usr/local/bin,
 as directed here: https://stackoverflow.com/questions/40388503/how-to-put-geckodriver-into-path/40392714
 
+To Do:
+- clear test database as part of teardown.
+
 """
+
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
@@ -60,13 +65,13 @@ class TestLaunchingDatabase(unittest.TestCase):
             'Enter a word')
 
         # Alir adds the word 'kaizen'
-        inputbox.send_keys('genki')
+        inputbox.send_keys('kaizen')
 
         # When she hits enter, the page updates, and now the page lists
         # "kaizen" as an item in a lexicon table
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
-        self.check_for_row_in_list_table('kaizen')
+        self.check_for_row_in_list_table('1: kaizen')
 
         # Alir wants to enter another word.
         inputbox = self.browser.find_element_by_id('id_new_item')
