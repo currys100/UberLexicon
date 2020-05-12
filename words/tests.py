@@ -72,8 +72,3 @@ class ItemModelTest(TestCase):
         self.assertEqual(second_saved_item.text, 'genki')
 
 
-
-# class SmokeTest(TestCase):
-#
-#     def test_bad_maths(self):
-#         self.assertEqual(1 + 1, 3)

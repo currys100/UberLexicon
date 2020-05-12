@@ -16,15 +16,17 @@ To Do:
 
 """
 
-
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import WebDriverException
 import time
-import unittest
+
+MAX_WAIT = 10  #seconds
 
 
 # noinspection SpellCheckingInspection
-class TestLaunchingDatabase(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     """
     Functional tests to determine if database and website are launched according to plan.
     """
@@ -32,16 +34,25 @@ class TestLaunchingDatabase(unittest.TestCase):
     def setUp(self):
         self.browser = webdriver.Firefox()
 
-    def check_for_row_in_list_table(self, row_text):
+    def wait_for_appropriate_duration(self, row_text):
         """
         Input:
             row_text (str): new word entered by user
 
-        :rtype: object
+        :rtype: bool
         """
-        table = self.browser.find_element_by_id('id_word_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn(row_text, [row.text for row in rows])
+        start_time = time.time()
+        while True:
+            try:
+                table = self.browser.find_element_by_id('id_word_table')
+                rows = table.find_elements_by_tag_name('tr')
+                self.assertIn(row_text, [row.text for row in rows])
+                return
+            except (WebDriverException, AssertionError) as e:
+                if time.time() - start_time > MAX_WAIT:
+                    print("exceeded max time")
+                    raise e
+                time.sleep(0.5)
 
     def tearDown(self):
         self.browser.quit()
@@ -51,7 +62,7 @@ class TestLaunchingDatabase(unittest.TestCase):
     #     self.assertIn('UberLexicon', self.browser.title)
 
     def test_add_new_word_to_db(self):
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # She notices the page title and header mention to-do lists
         self.assertIn('UberLexicon', self.browser.title)
@@ -70,32 +81,23 @@ class TestLaunchingDatabase(unittest.TestCase):
         # When she hits enter, the page updates, and now the page lists
         # "kaizen" as an item in a lexicon table
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
-        self.check_for_row_in_list_table('1: kaizen')
+        self.wait_for_appropriate_duration('1: kaizen')
 
         # Alir wants to enter another word.
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('genki')
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
-        self.check_for_row_in_list_table('1: kaizen')
-        self.check_for_row_in_list_table('2: genki')
+        self.wait_for_appropriate_duration('1: kaizen')
+        self.wait_for_appropriate_duration('2: genki')
+
+        self.fail("Finish the test!")
+
+    def test_add_definition_for_new_word(self):
+
+
+        self.fail("Finish the test!")
 
 
     # Alir wants to search the db for a specific word by name.
     # Alir searches the db for all words in Japanese.
     # Alir views all words in the db.
-
-if __name__ == '__main__':
-    unittest.main(warnings='ignore')
-
-
-
-    # def test_django_selenium_geckodriver_installed(self):
-    #     geckodriver_autoinstaller.install()  # Check if the current version of geckodriver exists
-    #     # and if it doesn't exist, download it automatically,
-    #     # then add geckodriver to path
-    #
-    #     driver = webdriver.Firefox()
-    #     driver.get("http://www.python.org")
-    #     assert "Python" in driver.title
