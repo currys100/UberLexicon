@@ -93,7 +93,12 @@ class NewVisitorTest(LiveServerTestCase):
         self.fail("Finish the test!")
 
     def test_add_definition_for_new_word(self):
+        inputbox_definition = self.browser.find_element_by_id('id_item_definition')
+        definition_text = 'incremental and continual improvement'
+        inputbox_definition.send_keys(definition_text)
+        inputbox_definition.send_keys(Keys.ENTER)
 
+        self.wait_for_appropriate_duration('1: kaizen', definition_text)
 
         self.fail("Finish the test!")
 
