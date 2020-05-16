@@ -57,11 +57,7 @@ class NewVisitorTest(LiveServerTestCase):
     def tearDown(self):
         self.browser.quit()
 
-    # def test_open_browser(self):
-    #     self.browser.get('http://localhost:8000')
-    #     self.assertIn('UberLexicon', self.browser.title)
-
-    def test_add_new_word_to_db(self):
+    def test_home_page_loads(self):
         self.browser.get(self.live_server_url)
 
         # She notices the page title and header mention to-do lists
@@ -69,19 +65,17 @@ class NewVisitorTest(LiveServerTestCase):
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('UberLexicon', header_text)
 
-        # Alir wants to add a new word to the db.
-        inputbox = self.browser.find_element_by_id('id_new_item')
+    def test_can_add_item_for_one_user(self):
+        # Alir wants to add a first item to her list.
+
+        inputbox = self.browser.find_element_by_id('id_word_table')
         self.assertEqual(
             inputbox.get_attribute('placeholder'),
             'Enter a word')
 
-        # Alir adds the word 'kaizen'
-        inputbox.send_keys('kaizen')
-
         # When she hits enter, the page updates, and now the page lists
         # "kaizen" as an item in a lexicon table
         inputbox.send_keys(Keys.ENTER)
-        self.wait_for_appropriate_duration('1: kaizen')
 
         # Alir wants to enter another word.
         inputbox = self.browser.find_element_by_id('id_new_item')
@@ -122,7 +116,7 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Buy milk')
         inputbox.send_keys(Keys.ENTER)
-        self.wait_for_row_in_list_table('1: Buy milk')
+        self.wait_for_appropriate_duration('1: Buy milk')
 
         # Francis gets his own unique URL
         francis_list_url = self.browser.current_url

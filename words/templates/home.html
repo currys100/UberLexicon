@@ -5,8 +5,8 @@
     <title>UberLexicon</title>
 </head>
 <body>
-    <h1>Add a new word</h1>
-    <form method="POST" action="/">
+    <h1>UberLexicon</h1>
+    <form method="POST" action="/words/new">
         <input name="item_text" id="id_new_item" placeholder="Enter a word" />
         {% csrf_token %}
     </form>

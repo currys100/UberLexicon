@@ -25,6 +25,6 @@ from words import views
 
 urlpatterns = [
     url(r'^$', views.home_page, name='home'),
-    url(r'^lists/new$', views.new_list, name='new_list'),
-    url(r'^lists/the-only-list-in-the-world/$', views.view_words, name='view_list'),
+    url(r'^words/new$', views.new_word, name='new_word'),
+    url(r'^words/alir_lexicon/$', views.view_words, name='view_word'),
 ]
