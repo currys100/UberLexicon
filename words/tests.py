@@ -71,28 +71,28 @@ class WordAndItemModelTest(TestCase):
 
 class WordViewTest(TestCase):
 
-    def test_displays_all_items(self):
+    def test_uses_words_template(self):
         word_ = Word.objects.create()
-        Item.objects.create(text='itemey 1', word=word_)
-        Item.objects.create(text='itemey 2', word=word_)
+        response = self.client.get(f'/words/{word_.id}/')
+        self.assertTemplateUsed(response, 'words.html')
 
-#     def test_displays_only_items_for_that_word(self):
-#
-#         correct_word = Word.objects.create()
-#         Item.objects.create(text='itemey 1', word=correct_word)
-#         # Item.objects.create(text='itemey 2', word=correct_word)
-#         # other_word = Word.objects.create()
-#         # Item.objects.create(text='other word item 1', word=other_word)
-#         # Item.objects.create(text='other word item 2', word=other_word)
-#
-#         # wtf = self.browser.current_url
-#         # print(wtf)
-#         response = self.client.get('/words/alir_lexicon')
-#         print("response: /n", response)
-#         # self.assertContains(response, 'itemey 1')
-#         # self.assertContains(response, 'itemey 2')
-#         # self.assertNotContains(response, 'other word item 1')
-# #         self.assertNotContains(response, 'other word item 2')
+    # def test_displays_only_items_for_that_word(self):
+    #
+    #     correct_word = Word.objects.create()
+    #     Item.objects.create(text='itemey 1', word=correct_word)
+    #     Item.objects.create(text='itemey 2', word=correct_word)
+    #     other_word = Word.objects.create()
+    #     Item.objects.create(text='other word item 1', word=other_word)
+    #     Item.objects.create(text='other word item 2', word=other_word)
+    #
+    #     # wtf = self.browser.current_url
+    #     # print(wtf)
+    #     response = self.client.get('/words/alir_lexicon')
+    #     # print("response: /n", response)
+    #     self.assertContains(response, 'itemey 1')
+    #     self.assertContains(response, 'itemey 2')
+    #     self.assertNotContains(response, 'other word item 1')
+    #     self.assertNotContains(response, 'other word item 2')
 
 
 class NewLexiconTest(TestCase):
@@ -105,4 +105,5 @@ class NewLexiconTest(TestCase):
 
     def test_redirects_after_POST(self):
         response = self.client.post('/words/new', data={'item_text': 'A new list item'})
-        self.assertRedirects(response, '/words/alir_lexicon/')
+        new_word = Word.objects.first()
+        self.assertRedirects(response, f'/words/{new_word.id}/')

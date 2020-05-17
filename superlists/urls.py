@@ -23,8 +23,9 @@ from words import views
 #     path('admin/', admin.site.urls),
 # ]
 
+
 urlpatterns = [
     url(r'^$', views.home_page, name='home'),
     url(r'^words/new$', views.new_word, name='new_word'),
-    url(r'^words/alir_lexicon/$', views.view_words, name='view_word'),
+    url(r'^words/(.+)/$', views.view_words, name='view_word'),
 ]
