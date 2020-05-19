@@ -23,9 +23,10 @@ from words import views
 #     path('admin/', admin.site.urls),
 # ]
 
-
+# paths are the django 2.0 way to do things. urls are the less convenient way.
 urlpatterns = [
     url(r'^$', views.home_page, name='home'),
     url(r'^words/new$', views.new_word, name='new_word'),
-    url(r'^words/(.+)/$', views.view_words, name='view_word'),
+    url(r'^words/(\d+)/$', views.view_words, name='view_word'),
+    url(r'^words/(\d+)/add_item$', views.add_item, name='add_item')
 ]

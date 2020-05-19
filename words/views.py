@@ -16,4 +16,9 @@ def new_word(request):
 def view_words(request, word_id):
     word_ = Word.objects.get(id=word_id)
     items = Item.objects.filter(word=word_)
-    return render(request, 'words.html', {'items': items})
+    return render(request, 'words.html', {'word': word_})
+
+
+def add_item(request, word_id):
+    word_added = Word.object.create()
+    return redirect(f'/words/{word_added.id}')

@@ -5,14 +5,14 @@
     <title>UberLexicon</title>
 </head>
 <body>
-    <h1>Add a new word</h1>
-    <form method="POST" action="/words/new">
+    <h1>Words template</h1>
+    <form method="POST" action="/words/{{ word.id }}/add_item">
         <input name="item_text" id="id_new_item" placeholder="Enter a word" />
         {% csrf_token %}
     </form>
 
     <table id="id_word_table">
-        {% for item in items %}
+        {% for item in word.item_set.all %}
             <tr><td>{{ forloop.counter }}: {{ item.text }}</td></tr>
         {% endfor %}
     </table>
