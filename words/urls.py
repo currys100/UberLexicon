@@ -16,16 +16,13 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from django.conf.urls import url, include
-from words import views as words_views
-from words import urls as words_urls
+from django.conf.urls import url
+from words import views
 
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-# ]
 
 # paths are the django 2.0 way to do things. urls are the less convenient way.
 urlpatterns = [
-    url(r'^$', words_views.home_page, name='home'),
-    url(r'^words/', include(words_urls))
+    url(r'^new$', views.new_word, name='new_word'),
+    url(r'^(\d+)/$', views.view_words, name='view_word'),
+    url(r'^(\d+)/add_item$', views.add_item, name='add_item')
 ]

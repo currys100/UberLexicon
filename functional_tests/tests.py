@@ -21,8 +21,10 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import WebDriverException
 import time
+from unittest import skipIf
 
 MAX_WAIT = 4  #seconds
+RUN_ONE = True
 
 
 # noinspection SpellCheckingInspection
@@ -57,6 +59,7 @@ class NewVisitorTest(LiveServerTestCase):
     def tearDown(self):
         self.browser.quit()
 
+    @skipIf(RUN_ONE, "run only most recent test")
     def test_home_page_loads(self):
         self.browser.get(self.live_server_url)
 
@@ -65,6 +68,7 @@ class NewVisitorTest(LiveServerTestCase):
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('UberLexicon', header_text)
 
+    @skipIf(RUN_ONE, "run only most recent test")
     def test_can_add_item_for_one_user(self):
         self.browser.get(self.live_server_url)
         inputbox = self.browser.find_element_by_id('id_new_item')
@@ -79,6 +83,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.wait_for_appropriate_duration('1: kaizen')
         self.wait_for_appropriate_duration('2: genki')
 
+    @skipIf(RUN_ONE, "run only most recent test")
     def test_multiple_users_can_start_lists_at_different_urls(self):
         # Edith starts a new to-do list
         self.browser.get(self.live_server_url)
@@ -120,4 +125,23 @@ class NewVisitorTest(LiveServerTestCase):
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Buy peacock feathers', page_text)
         self.assertIn('Buy milk', page_text)
+
+    def test_layout_and_styling(self):
+        self.browser.get(self.live_server_url)
+        inputbox = self.browser.find_element_by_id('id_new_item')
+
+        self.assertAlmostEqual(inputbox.location['x'] + inputbox.size['width']/2,
+                               512,
+                               delta=10)
+
+        # She starts a new list and sees the input is nicely
+        # centered there too
+        inputbox.send_keys('testing')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_appropriate_duration('1: testing')
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512,
+            delta=10)
 
