@@ -75,32 +75,51 @@ class WordViewTest(TestCase):
 
         self.assertEqual(response.context['word'], correct_list)
 
-    # def test_displays_only_items_for_that_word(self):
-    #     correct_word = Word.objects.create()
-    #     Item.objects.create(text='itemey 1', word=correct_word)
-    #     Item.objects.create(text='itemey 2', word=correct_word)
-    #     other_word = Word.objects.create()
-    #     Item.objects.create(text='other word item 1', word=other_word)
-    #     Item.objects.create(text='other word item 2', word=other_word)
-    #
-    #     print(f'correct word.id is: /words/{correct_word.id}')
-    #     response = self.client.get(f'/words/{correct_word.id}')
-    #
-    #     self.assertContains(response, 'itemey 1')
-    #     self.assertContains(response, 'itemey 2')
-    #     self.assertNotContains(response, 'other word item 1')
-    #     self.assertNotContains(response, 'other word item 2')
+    def test_displays_only_items_for_that_word(self):
+        correct_word = Word.objects.create()
+        Item.objects.create(text='itemey 1', word=correct_word)
+        Item.objects.create(text='itemey 2', word=correct_word)
+        other_word = Word.objects.create()
+        Item.objects.create(text='other word item 1', word=other_word)
+        Item.objects.create(text='other word item 2', word=other_word)
+
+        response = self.client.get(f'/words/{correct_word.id}/')
+
+        self.assertContains(response, 'itemey 1')
+        self.assertContains(response, 'itemey 2')
+        self.assertNotContains(response, 'other word item 1')
+        self.assertNotContains(response, 'other word item 2')
 
 
-class NewListTest(TestCase):
+class NewItemTest(TestCase):
 
-    def test_can_save_a_POST_request_to_db(self):
+    def test_can_save_a_POST_request(self):
         self.client.post('/words/new', data={'item_text': 'A new list item'})
         self.assertEqual(Item.objects.count(), 1)
         new_item = Item.objects.first()
         self.assertEqual(new_item.text, 'A new list item')
 
-    def test_redirects_after_POST(self):
-        response = self.client.post('/words/new', data={'item_text': 'A new list item'})
-        new_word = Word.objects.first()
-        self.assertRedirects(response, f'/words/{new_word.id}/')
+    def test_can_save_a_POST_request_to_an_existing_list(self):
+        other_list = Word.objects.create()
+        correct_list = Word.objects.create()
+
+        self.client.post(
+            f'/words/{correct_list.id}/add_item',
+            data={'item_text': 'A new item for an existing list'}
+        )
+
+        self.assertEqual(Item.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, 'A new item for an existing list')
+        self.assertEqual(new_item.word, correct_list)
+
+    def test_redirects_to_list_view(self):
+        correct_list = Word.objects.create()
+        other_list = Word.objects.create()
+
+        response = self.client.post(
+            f'/words/{correct_list.id}/add_item',
+            data={'item_text': 'A new item for an existing list'}
+        )
+
+        self.assertRedirects(response, f'/words/{correct_list.id}/')

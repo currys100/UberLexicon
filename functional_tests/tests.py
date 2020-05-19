@@ -66,16 +66,11 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn('UberLexicon', header_text)
 
     def test_can_add_item_for_one_user(self):
-        # Alir wants to add a first item to her list.
-
-        inputbox = self.browser.find_element_by_id('id_word_table')
-        self.assertEqual(
-            inputbox.get_attribute('placeholder'),
-            'Enter a word')
-
-        # When she hits enter, the page updates, and now the page lists
-        # "kaizen" as an item in a lexicon table
+        self.browser.get(self.live_server_url)
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('kaizen')
         inputbox.send_keys(Keys.ENTER)
+        self.wait_for_appropriate_duration('1: kaizen')
 
         # Alir wants to enter another word.
         inputbox = self.browser.find_element_by_id('id_new_item')
@@ -94,11 +89,9 @@ class NewVisitorTest(LiveServerTestCase):
 
         # She notices that her list has a unique URL
         edith_list_url = self.browser.current_url
-        self.assertRegex(edith_list_url, '/words/(\d+)/')
-
+        self.assertRegex(edith_list_url, '/words/.+/')
 
         # Now a new user, Francis, comes along to the site.
-
         ## We use a new browser session to make sure that no information
         ## of Edith's is coming through from cookies etc
         self.browser.quit()
@@ -120,7 +113,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Francis gets his own unique URL
         francis_list_url = self.browser.current_url
-        self.assertRegex(francis_list_url, '/words/(\d+)/')
+        self.assertRegex(francis_list_url, '/words/.+/')
         self.assertNotEqual(francis_list_url, edith_list_url)
 
         # Again, there is no trace of Edith's list
