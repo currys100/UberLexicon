@@ -1,22 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>UberLexicon</title>
-</head>
-<body>
-    <h1>Words template</h1>
-    <form method="POST" action="/words/{{ word.id }}/add_item">
-        <p style="text-align: center;">
-            <input name="item_text" id="id_new_item" placeholder="Enter a word" />
-        </p>
-        {% csrf_token %}
-    </form>
+{% extends 'base.html' %}
 
-    <table id="id_word_table">
-        {% for item in word.item_set.all %}
-            <tr><td>{{ forloop.counter }}: {{ item.text }}</td></tr>
-        {% endfor %}
-    </table>
-</body>
-</html>
+{% block header_text %}Alir's UberLexicon{% endblock %}
+
+{% block form_action %}/words/{{ word.id }}/add_item{% endblock %}
+
+{% block table %}
+  <table id="id_word_table">
+    {% for item in word.item_set.all %}
+      <tr><td>{{ forloop.counter }}: {{ item.text }}</td></tr>
+    {% endfor %}
+  </table>
+{% endblock %}
