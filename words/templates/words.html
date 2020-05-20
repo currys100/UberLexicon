@@ -5,7 +5,7 @@
 {% block form_action %}/words/{{ word.id }}/add_item{% endblock %}
 
 {% block table %}
-  <table id="id_word_table">
+  <table id="id_word_table" class="table">
     {% for item in word.item_set.all %}
       <tr><td>{{ forloop.counter }}: {{ item.text }}</td></tr>
     {% endfor %}
